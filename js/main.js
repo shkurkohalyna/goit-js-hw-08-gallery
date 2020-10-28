@@ -36,9 +36,9 @@ function onGaleryItemClick(event) {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
-  lightbox.classList.add('is-open');
-  lightboxImage.scr = event.target.dataset.source;
-  lightboxImage.alt = event.target.alt;
+  lightboxImage.src = event.target.dataset.source;
+lightboxImage.alt = event.target.alt;
+lightbox.classList.add('is-open');
 }
 
 const closeIcon = document.querySelector('[data-action="close-lightbox"]');
