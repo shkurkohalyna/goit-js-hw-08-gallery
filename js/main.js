@@ -5,7 +5,8 @@ const galleryRef = document.querySelector('.js-gallery');
 const galleryItemMarkup = createGalleryItemMarkup(products);
 const lightbox = document.querySelector('.lightbox');
 const lightboxImage = document.querySelector('.lightbox__image');
-
+const closeIcon = document.querySelector('[data-action="close-lightbox"]');
+const backdrop = document.querySelector('.lightbox__overlay');
 
 
 function createGalleryItemMarkup(products) {
@@ -25,44 +26,43 @@ function createGalleryItemMarkup(products) {
 </li>`;
     }).join('');
 };
-
-
 galleryRef.insertAdjacentHTML('beforeend', galleryItemMarkup);
+
 galleryRef.addEventListener('click', onGaleryItemClick);
+closeIcon.addEventListener('click', closeModal);
 
 
-function onGaleryItemClick(event) {
-  event.preventDefault();
-  if (event.target.nodeName !== 'IMG') {
-    return;
-  }
-  lightboxImage.src = event.target.dataset.source;
+function onGaleryItemClick() {
+  window.addEventListener('keydown', onEscKeyPress);
+event.preventDefault();
+if (event.target.nodeName !== 'IMG') return;
+
+lightboxImage.src = event.target.dataset.source;
 lightboxImage.alt = event.target.alt;
 lightbox.classList.add('is-open');
 }
 
-const closeIcon = document.querySelector('[data-action="close-lightbox"]');
-closeIcon.addEventListener('click', closeModal);
 
-
-
-function closeModal(event) {
+function closeModal() {
+  window.removeEventListener('keydown', onEscKeyPress);
   if (event.target.nodeName === 'IMG') {
     return;
   }
+  
   lightbox.classList.remove('is-open');
   lightboxImage.removeAttribute('src');
   lightboxImage.removeAttribute("alt");
 }
-// function closeModal() {
-//   window.removeEventListener('keydown', onEscKeyPress);
-//   lightbox.classList.remove('is-open');
-// }
 
-// function onEscKeyPress(event) {
-//   const ESC_KEY = 'Escape';
-//   const isESCKey = event.code === ESC_KEY;
-//   if (isESCKey) {
-//     closeModal();
-// }
-// }
+backdrop.addEventListener('click', onBackdropClick);
+function onBackdropClick(event) {
+  if (event.currentTarget === event.target) {
+    closeModal();
+  }
+}
+
+function onEscKeyPress(event) {
+  if (event.code === 'Escape') {
+    closeModal();
+    }   
+}
